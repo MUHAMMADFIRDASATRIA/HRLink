@@ -32,10 +32,15 @@
 
 ## 📋 Daftar Isi
 
-- [Tentang Proyek](#-tentang-proyek)
-- [Fitur Utama](#-fitur-utama)
-- [Tech Stack](#-tech-stack)
-- [Prasyarat](#-prasyarat)
+<details>
+  <summary><b>Daftar Isi</b> 📚</summary>
+  <ul>
+    <li>📌 <a href="#-tentang-proyek">Tentang Proyek</a></li>
+    <li>✨ <a href="#-fitur-utama">Fitur Utama</a></li>
+    <li>🛠️ <a href="#-tech-stack">Tech Stack</a></li>
+    <li>✅ <a href="#-prasyarat">Prasyarat</a></li>
+  </ul>
+</details>
 
 ---
 
@@ -99,13 +104,39 @@
 
 ## ✅ Prasyarat
 
-Pastikan environment kamu sudah memiliki tools berikut sebelum memulai instalasi:
+<div align="center">
 
-```
-PHP        >= 8.2
-Composer   >= 2.x
-Node.js    >= 18.x
-NPM        >= 9.x  (atau Yarn / PNPM)
-MySQL      >= 8.0
-Git        >= 2.x
-```
+<table>
+  <tr>
+    <th>🔧 Tools</th>
+    <th>Versi Minimum</th>
+  </tr>
+  <tr>
+    <td>PHP</td>
+    <td>8.2</td>
+  </tr>
+  <tr>
+    <td>Composer</td>
+    <td>2.x</td>
+  </tr>
+  <tr>
+    <td>Node.js</td>
+    <td>18.x</td>
+  </tr>
+  <tr>
+    <td>NPM / Yarn / PNPM</td>
+    <td>9.x</td>
+  </tr>
+  <tr>
+    <td>MySQL</td>
+    <td>8.0</td>
+  </tr>
+  <tr>
+    <td>Git</td>
+    <td>2.x</td>
+  </tr>
+</table>
+
+</div>
+
+---
