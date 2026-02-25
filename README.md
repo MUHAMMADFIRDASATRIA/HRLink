@@ -32,28 +32,10 @@
 
 ## 📋 Daftar Isi
 
-<div align="center">
-
-<table>
-  <tr>
-    <td align="center">📖</td>
-    <td><a href="#-tentang-proyek"><b>Tentang Proyek</b></a></td>
-  </tr>
-  <tr>
-    <td align="center">✨</td>
-    <td><a href="#-fitur-utama"><b>Fitur Utama</b></a></td>
-  </tr>
-  <tr>
-    <td align="center">🛠️</td>
-    <td><a href="#-tech-stack"><b>Tech Stack</b></a></td>
-  </tr>
-  <tr>
-    <td align="center">⚡</td>
-    <td><a href="#-prasyarat"><b>Prasyarat</b></a></td>
-  </tr>
-</table>
-
-</div>
+- [Tentang Proyek](#-tentang-proyek)
+- [Fitur Utama](#-fitur-utama)
+- [Tech Stack](#-tech-stack)
+- [Prasyarat](#-prasyarat)
 
 ---
 
@@ -83,20 +65,35 @@
 
 ## 🛠️ Tech Stack
 
-### Backend
+<div align="center">
 
-- **[Laravel 11](https://laravel.com)** — PHP Framework
-- **[Laravel Sanctum](https://laravel.com/docs/sanctum)** — API Authentication
-- **[MySQL 8](https://mysql.com)** — Database
-- **[Spatie Permission](https://spatie.be/docs/laravel-permission)** — Role & Permission Management
+<table>
+  <tr>
+    <th>Backend</th>
+    <th>Frontend</th>
+  </tr>
+  <tr>
+    <td align="left">
+      <ul>
+        <li>🚀 <b><a href="https://laravel.com">Laravel 11</a></b></li>
+        <li>🔒 <b><a href="https://laravel.com/docs/sanctum">Sanctum</a></b></li>
+        <li>🗄️ <b><a href="https://mysql.com">MySQL 8</a></b></li>
+        <li>🛡️ <b><a href="https://spatie.be/docs/laravel-permission">Spatie Permission</a></b></li>
+      </ul>
+    </td>
+    <td align="left">
+      <ul>
+        <li>🌱 <b><a href="https://vuejs.org">Vue.js 3</a></b></li>
+        <li>🎨 <b><a href="https://tailwindcss.com">Tailwind CSS 3</a></b></li>
+        <li>🧭 <b><a href="https://router.vuejs.org">Vue Router 4</a></b></li>
+        <li>🔗 <b><a href="https://axios-http.com">Axios</a></b></li>
+        <li>⚡ <b><a href="https://vitejs.dev">Vite</a></b></li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
-### Frontend
-
-- **[Vue.js 3](https://vuejs.org)** — Progressive JavaScript Framework (Composition API)
-- **[Tailwind CSS 3](https://tailwindcss.com)** — Utility-First CSS Framework
-- **[Vue Router 4](https://router.vuejs.org)** — Client-Side Routing
-- **[Axios](https://axios-http.com)** — HTTP Client
-- **[Vite](https://vitejs.dev)** — Build Tool & Dev Server
+</div>
 
 ---
 
@@ -112,5 +109,3 @@ NPM        >= 9.x  (atau Yarn / PNPM)
 MySQL      >= 8.0
 Git        >= 2.x
 ```
-
----
