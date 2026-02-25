@@ -1,59 +1,112 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+<img src="https://img.shields.io/badge/version-1.0.0-4db89e?style=for-the-badge" />
+<img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" />
+<img src="https://img.shields.io/badge/status-active-success?style=for-the-badge" />
 
-## About Laravel
+<br /><br />
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+```
+██╗  ██╗██████╗ ██╗     ██╗███╗   ██╗██╗  ██╗
+██║  ██║██╔══██╗██║     ██║████╗  ██║██║ ██╔╝
+███████║██████╔╝██║     ██║██╔██╗ ██║█████╔╝
+██╔══██║██╔══██╗██║     ██║██║╚██╗██║██╔═██╗
+██║  ██║██║  ██║███████╗██║██║ ╚████║██║  ██╗
+╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# 🔗 HRLink — Sistem Monitoring PKWT
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Aplikasi manajemen dan monitoring kontrak kerja (PKWT) berbasis web yang modern, cepat, dan mudah digunakan.**
 
-## Learning Laravel
+<br />
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat-square&logo=vue.js&logoColor=white)](https://vuejs.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://mysql.com)
+[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<br />
 
-## Laravel Sponsors
+![Dashboard Preview](https://placehold.co/900x480/f0f7f4/4db89e?text=HRLink+Dashboard+Preview&font=montserrat)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+</div>
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 📋 Daftar Isi
 
-## Contributing
+- [Tentang Proyek](#-tentang-proyek)
+- [Fitur Utama](#-fitur-utama)
+- [Tech Stack](#-tech-stack)
+- [Prasyarat](#-prasyarat)
+- [Instalasi](#-instalasi)
+- [Konfigurasi](#-konfigurasi)
+- [Menjalankan Aplikasi](#-menjalankan-aplikasi)
+- [Struktur Proyek](#-struktur-proyek)
+- [API Endpoints](#-api-endpoints)
+- [Screenshot](#-screenshot)
+- [Kontribusi](#-kontribusi)
+- [Lisensi](#-lisensi)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 📌 Tentang Proyek
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**HRLink** adalah sistem informasi berbasis web yang dirancang untuk membantu tim Human Resources dalam memantau dan mengelola kontrak kerja waktu tertentu **(PKWT)**. Sistem ini memberikan visibilitas penuh terhadap status kontrak karyawan — dari yang masih aktif, akan segera berakhir, hingga yang sudah kedaluwarsa — secara real-time dalam satu dashboard terpusat.
 
-## Security Vulnerabilities
+> 💡 Dibangun dengan semangat **"HRD lebih fokus ke orang, bukan ke spreadsheet."**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## ✨ Fitur Utama
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Fitur                    | Deskripsi                                 | Status  |
+| ------------------------ | ----------------------------------------- | ------- |
+| 🔐 **Autentikasi**       | Login aman dengan JWT / Sanctum           | ✅ Done |
+| 📊 **Dashboard**         | Rekap statistik PKWT secara real-time     | ✅ Done |
+| 👥 **Data Karyawan**     | Manajemen lengkap data karyawan           | ✅ Done |
+| 📄 **Data PKWT**         | CRUD kontrak beserta histori perubahan    | ✅ Done |
+| 🔔 **Reminder**          | Notifikasi otomatis kontrak akan berakhir | ✅ Done |
+| 🏢 **Kelola Departemen** | Master data departemen perusahaan         | ✅ Done |
+| 🪪 **Kelola Jabatan**    | Master data jabatan / posisi              | ✅ Done |
+| 📈 **Grafik & Chart**    | Visualisasi data PKWT per periode         | ✅ Done |
+| 📱 **Responsive UI**     | Tampilan optimal di semua ukuran layar    | ✅ Done |
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+
+- **[Laravel 11](https://laravel.com)** — PHP Framework
+- **[Laravel Sanctum](https://laravel.com/docs/sanctum)** — API Authentication
+- **[MySQL 8](https://mysql.com)** — Database
+- **[Spatie Permission](https://spatie.be/docs/laravel-permission)** — Role & Permission Management
+
+### Frontend
+
+- **[Vue.js 3](https://vuejs.org)** — Progressive JavaScript Framework (Composition API)
+- **[Tailwind CSS 3](https://tailwindcss.com)** — Utility-First CSS Framework
+- **[Vue Router 4](https://router.vuejs.org)** — Client-Side Routing
+- **[Axios](https://axios-http.com)** — HTTP Client
+- **[Vite](https://vitejs.dev)** — Build Tool & Dev Server
+
+---
+
+## ✅ Prasyarat
+
+Pastikan environment kamu sudah memiliki tools berikut sebelum memulai instalasi:
+
+```
+PHP        >= 8.2
+Composer   >= 2.x
+Node.js    >= 18.x
+NPM        >= 9.x  (atau Yarn / PNPM)
+MySQL      >= 8.0
+Git        >= 2.x
+```
+
+---
