@@ -28,12 +28,6 @@
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://mysql.com)
 [![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 
-<br />
-
-![Dashboard Preview](https://placehold.co/900x480/f0f7f4/4db89e?text=HRLink+Dashboard+Preview&font=montserrat)
-
-</div>
-
 ---
 
 ## 📋 Daftar Isi
