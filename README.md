@@ -32,15 +32,37 @@
 
 ## 📋 Daftar Isi
 
-<details>
-  <summary><b>Daftar Isi</b> 📚</summary>
-  <ul>
-    <li>📌 <a href="#-tentang-proyek">Tentang Proyek</a></li>
-    <li>✨ <a href="#-fitur-utama">Fitur Utama</a></li>
-    <li>🛠️ <a href="#-tech-stack">Tech Stack</a></li>
-    <li>✅ <a href="#-prasyarat">Prasyarat</a></li>
-  </ul>
-</details>
+<div align="center">
+
+<table>
+  <tr>
+    <th>Bagian</th>
+    <th>Ikon</th>
+    <th>Link</th>
+  </tr>
+  <tr>
+    <td>Tentang Proyek</td>
+    <td>📌</td>
+    <td><a href="#-tentang-proyek">Tentang Proyek</a></td>
+  </tr>
+  <tr>
+    <td>Fitur Utama</td>
+    <td>✨</td>
+    <td><a href="#-fitur-utama">Fitur Utama</a></td>
+  </tr>
+  <tr>
+    <td>Tech Stack</td>
+    <td>🛠️</td>
+    <td><a href="#-tech-stack">Tech Stack</a></td>
+  </tr>
+  <tr>
+    <td>Prasyarat</td>
+    <td>✅</td>
+    <td><a href="#-prasyarat">Prasyarat</a></td>
+  </tr>
+</table>
+
+</div>
 
 ---
 
