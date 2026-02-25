@@ -17,9 +17,11 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        // Seeder akun HRD untuk login
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'HRD',
+            'email' => 'hrd@example.com',
+            'password' => bcrypt('password123'), // Ganti password sesuai kebutuhan
         ]);
     }
 }
