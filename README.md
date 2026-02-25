@@ -32,18 +32,28 @@
 
 ## 📋 Daftar Isi
 
-- [Tentang Proyek](#-tentang-proyek)
-- [Fitur Utama](#-fitur-utama)
-- [Tech Stack](#-tech-stack)
-- [Prasyarat](#-prasyarat)
-- [Instalasi](#-instalasi)
-- [Konfigurasi](#-konfigurasi)
-- [Menjalankan Aplikasi](#-menjalankan-aplikasi)
-- [Struktur Proyek](#-struktur-proyek)
-- [API Endpoints](#-api-endpoints)
-- [Screenshot](#-screenshot)
-- [Kontribusi](#-kontribusi)
-- [Lisensi](#-lisensi)
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center">📖</td>
+    <td><a href="#-tentang-proyek"><b>Tentang Proyek</b></a></td>
+  </tr>
+  <tr>
+    <td align="center">✨</td>
+    <td><a href="#-fitur-utama"><b>Fitur Utama</b></a></td>
+  </tr>
+  <tr>
+    <td align="center">🛠️</td>
+    <td><a href="#-tech-stack"><b>Tech Stack</b></a></td>
+  </tr>
+  <tr>
+    <td align="center">⚡</td>
+    <td><a href="#-prasyarat"><b>Prasyarat</b></a></td>
+  </tr>
+</table>
+
+</div>
 
 ---
 
