@@ -27,17 +27,22 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $apitoken = Str::random(60);
-        $user->api_token = Hash('sha256', $apitoken);
-        $user->exp_token = Carbon::now()->addDay(); 
-        $user->save();
+        $user->tokens()->delete();
+        $token = $user->createToken('auth_token')->plainTextToken;
 
 
         return response()->json([
-            'access_token' => $apitoken,
+            'access_token' => $token,
             'remember_token' => $user->remember_token,
             'token_type' => 'Bearer',
             'message' => 'Login successful',
         ], 200);
+    }
+
+    public function logout(Request $request){
+    Auth::guard()->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return response()->json(['message'=>'Logged out']);
     }
 }

@@ -23,8 +23,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'api_token',
-        'exp_token',
         'remember_token',
     ];
 
@@ -35,8 +33,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'api_token',
-        'exp_token',
         'remember_token',
     ];
 
@@ -51,5 +47,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function departments()
+    {
+        return $this->hasMany(Departments::class, 'user_id');
     }
 }

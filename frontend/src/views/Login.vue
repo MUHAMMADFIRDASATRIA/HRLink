@@ -349,7 +349,7 @@ const handleLogin = async () => {
       password: password.value
     })
 
-    localStorage.setItem('token', response.data.token)
+    localStorage.setItem('token', response.data.access_token)
 
     if (remember.value) {
       localStorage.setItem('remember_email', email.value)

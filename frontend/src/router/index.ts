@@ -15,8 +15,45 @@ const router = createRouter({
       name: 'Dashboard',
       component: () => import('@/views/Dashboard.vue'),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/Karyawan',
+      name: 'Karyawan',
+      component: () => import('@/views/DataKaryawan.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/PKWT',
+      name: 'PKWT',
+      component: () => import('@/views/PkwtView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/Departments',
+      name: 'Departments',
+      component: () => import('@/views/Departments.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path:'/Jabatan',
+      name:'Jabatan',
+      component: () => import('@/views/Jabatan.vue'),
+      meta: { requiresAuth: true }
     }
   ],
+})
+
+router.beforeEach((to, from) => {
+  const isLoggedIn = !!localStorage.getItem('token')
+
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    return { name: 'Login' }
+  }
+  if (to.name === 'Login' && isLoggedIn) {
+    return { name: 'Dashboard' }
+  }
+
+  return true
 })
 
 export default router

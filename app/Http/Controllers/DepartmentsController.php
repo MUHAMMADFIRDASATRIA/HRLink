@@ -34,12 +34,11 @@ class DepartmentsController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
         ]);
 
         $department = Departments::create([
             'name' => $request->input('name'),
-            'description' => $request->input('description'),
+            'user_id' => $user->id,
         ]);
 
         return response()->json([
@@ -61,7 +60,6 @@ class DepartmentsController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
         ]);
 
         $department = Departments::find($id);
@@ -73,11 +71,8 @@ class DepartmentsController extends Controller
 
         if ($request->filled('name')) {
             $data['name'] = $request->input('name');
-        } if ($request->filled('description')) {
-            $data['description'] = $request->input('description');
-        }
+        } 
 
-        $department->Department::findOrFail($id);
         $department->update($data);
 
         return response()->json([

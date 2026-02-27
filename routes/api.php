@@ -14,6 +14,8 @@ use App\Http\Controllers\PkwtController;
 Route::POST('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function(){
+    Route::POST('/logout', [AuthController::class, 'logout']);
+
     Route::GET('/Dashboard', [DashboardController::class, 'showDashboard']);
 
     Route::GET('/Departments', [DepartmentsController::class, 'showDepartments']);
