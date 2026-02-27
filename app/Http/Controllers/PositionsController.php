@@ -19,7 +19,8 @@ class PositionsController extends Controller
     public function showPositions()
     {
         $user = Auth::user();
-        $positions = Positions::where('user_id', $user->id)->get();
+        $departments = Departments::where('user_id', $user->id)->get();
+        $positions = Positions::whereIn('department_id', $departments->pluck('id'))->get();
 
         return response()->json([
             'message' => 'Positions retrieved successfully',
@@ -30,17 +31,16 @@ class PositionsController extends Controller
     public function createPosition(Request $request)
     {
         $user = Auth::user();
-        $positions = Positions::where('user_id', $user->id)->get();
+        $departments = Departments::where('user_id', $user->id)->get();
+        $positions = Positions::whereIn('department_id', $departments->pluck('id'))->get();
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'title' => 'required|string|max:255',
             'department_id' => 'required|integer|exists:departments,id',
         ]);
 
             $position = Positions::create([
-                'name' => $request->input('name'),
-                'description' => $request->input('description'),
+                'title' => $request->input('title'),
                 'department_id' => $request->input('department_id'),
             ]);
 
@@ -53,23 +53,24 @@ class PositionsController extends Controller
     public function updatePosition(Request $request, $id)
     {
         $user = Auth::user();
-        $positions = Positions::where( 'id', $id)
-                    ->where('user_id', $user->id)->get()
+        $departments = Departments::where('user_id', $user->id)->get();
+        $positions = Positions::whereIn('department_id', $departments->pluck('id'))
+                    ->where('id', $id)
                     ->first();
 
+        if (!$positions) {
+            return response()->json(['message' => 'Position not found'], 404);
+        }
+
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'title' => 'required|string|max:255',
             'department_id' => 'required|integer|exists:departments,id',
         ]);
 
         $data = [];
 
-        if ($request->filled('name')) {
-            $data['name'] = $request->input('name');
-        }
-        if ($request->filled('description')) {
-            $data['description'] = $request->input('description');
+        if ($request->filled('title')) {
+            $data['title'] = $request->input('title');
         }
         if ($request->filled('department_id')) {
             $data['department_id'] = $request->input('department_id');
@@ -87,8 +88,9 @@ class PositionsController extends Controller
     public function deletePosition($id)
     {
         $user = Auth::user();
-        $positions = Positions::where('id', $id)
-                    ->where('user_id', $user->id)
+        $departments = Departments::where('user_id', $user->id)->get();
+        $positions = Positions::whereIn('department_id', $departments->pluck('id'))
+                    ->where('id', $id)
                     ->first();
 
         if (!$positions) {

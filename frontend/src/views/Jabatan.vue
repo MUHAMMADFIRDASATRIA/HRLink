@@ -43,8 +43,8 @@
             </thead>
             <tbody>
               <tr v-for="(item, index) in paginatedData" :key="item.id" :class="{ 'row-even': index % 2 === 0 }">
-                <td class="col-jabatan">{{ item.nama }}</td>
-                <td class="col-dept">{{ item.departemen }}</td>
+                <td class="col-jabatan">{{ item.title }}</td>
+                <td class="col-dept">{{ getDepartmentName(item.department_id) }}</td>
                 <td class="col-aksi">
                   <div class="action-buttons">
                     <button class="btn-edit" @click="openEditModal(item)">
@@ -85,7 +85,7 @@
       <div class="modal-overlay" v-if="showModal" @click.self="closeModal">
         <div class="modal">
           <div class="modal-header">
-            <h3>{{ isEditing ? 'Edit Jabatan' : 'Tambah Jabatan' }}</h3>
+            <h3>{{ isEditMode ? 'Edit Jabatan' : 'Tambah Jabatan' }}</h3>
             <button class="modal-close" @click="closeModal">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
@@ -93,13 +93,13 @@
           <div class="modal-body">
             <div class="form-group">
               <label>Nama Jabatan</label>
-              <input v-model="form.nama" type="text" placeholder="Masukkan nama jabatan" />
+              <input v-model="form.title" type="text" placeholder="Masukkan nama jabatan" />
             </div>
             <div class="form-group">
               <label>Departemen</label>
-              <select v-model="form.departemen">
+              <select v-model="form.department_id">
                 <option value="" disabled>Pilih departemen</option>
-                <option v-for="d in departemenOptions" :key="d" :value="d">{{ d }}</option>
+                <option v-for="d in departmentOptions" :key="d.id" :value="d.id">{{ d.name }}</option>
               </select>
             </div>
           </div>
@@ -123,7 +123,7 @@
           </div>
           <div class="modal-body">
             <p class="delete-confirm-text">
-              Yakin ingin menghapus jabatan <strong>{{ deleteTarget?.nama }}</strong>?
+              Yakin ingin menghapus jabatan <strong>{{ deleteTarget?.title }}</strong>?
             </p>
           </div>
           <div class="modal-footer">
@@ -137,88 +137,39 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AppSidebar from '@/components/AppSidebar.vue'
 import AppTopbar from '@/components/AppTopbar.vue'
+import { useJabatan } from '@/composables/useJabatan'
 
 const activeNav = ref('jabatan')
 const handleLogout = () => console.log('logout')
 
-// ===== DATA =====
-const jabatanList = ref([
-  { id: 1, nama: 'Staff HRD',      departemen: 'HRD & GA'  },
-  { id: 2, nama: 'Supervisor IT',  departemen: 'IT'        },
-  { id: 3, nama: 'Staff Admin',    departemen: 'Finance'   },
-  { id: 4, nama: 'Operator',       departemen: 'Produksi'  },
-  { id: 5, nama: 'Accounting',     departemen: 'Finance'   },
-  { id: 6, nama: 'Manager Sales',  departemen: 'Sales'     },
-])
+const {
+  jabatanList,
+  departmentOptions,
+  currentPage,
+  totalPages,
+  paginatedData,
+  showModal,
+  isEditMode,
+  editingId,
+  form,
+  loadData,
+  openAddModal,
+  openEditModal,
+  closeModal,
+  confirmDelete,
+  showDeleteModal,
+  deleteTarget,
+  deleteData,
+  saveData,
+  getDepartmentName
+} = useJabatan()
 
-const departemenOptions = ['HRD & GA', 'IT', 'Finance', 'Produksi', 'Sales']
-
-// ===== PAGINATION =====
-const currentPage = ref(1)
-const perPage = 10
-
-const totalPages = computed(() => Math.max(1, Math.ceil(jabatanList.value.length / perPage)))
-
-const paginatedData = computed(() => {
-  const start = (currentPage.value - 1) * perPage
-  return jabatanList.value.slice(start, start + perPage)
+onMounted(() => {
+  loadData()
 })
-
-// ===== MODAL TAMBAH/EDIT =====
-const showModal = ref(false)
-const isEditing = ref(false)
-const editingId = ref(null)
-const form = ref({ nama: '', departemen: '' })
-
-const openAddModal = () => {
-  isEditing.value = false
-  editingId.value = null
-  form.value = { nama: '', departemen: '' }
-  showModal.value = true
-}
-
-const openEditModal = (item) => {
-  isEditing.value = true
-  editingId.value = item.id
-  form.value = { nama: item.nama, departemen: item.departemen }
-  showModal.value = true
-}
-
-const closeModal = () => {
-  showModal.value = false
-}
-
-const saveData = () => {
-  if (!form.value.nama.trim() || !form.value.departemen) return
-
-  if (isEditing.value) {
-    const idx = jabatanList.value.findIndex(j => j.id === editingId.value)
-    if (idx !== -1) jabatanList.value[idx] = { id: editingId.value, ...form.value }
-  } else {
-    const newId = Math.max(...jabatanList.value.map(j => j.id), 0) + 1
-    jabatanList.value.push({ id: newId, ...form.value })
-  }
-
-  closeModal()
-}
-
-// ===== MODAL HAPUS =====
-const showDeleteModal = ref(false)
-const deleteTarget = ref(null)
-
-const confirmDelete = (item) => {
-  deleteTarget.value = item
-  showDeleteModal.value = true
-}
-
-const deleteData = () => {
-  jabatanList.value = jabatanList.value.filter(j => j.id !== deleteTarget.value.id)
-  showDeleteModal.value = false
-  if (currentPage.value > totalPages.value) currentPage.value = totalPages.value
-}
 </script>
 
 <style scoped>

@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('department_id')->constrained()->onDelete('cascade');
-            $table->foreignId('position_id')->nullable()->constrained('positions')->onDelete('set null');
-            $table->string('name');
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('title');
             $table->timestamps();
         });
     }
