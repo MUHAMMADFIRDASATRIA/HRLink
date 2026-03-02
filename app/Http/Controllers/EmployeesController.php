@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Employees;
+use App\Models\Departments;
+use App\Models\Positions;
 
 
 class EmployeesController extends Controller
@@ -19,7 +21,9 @@ class EmployeesController extends Controller
     public function showEmployees()
     {
         $user = Auth::user();
-        $employees = Employees::where('user_id', $user->id)->get();
+        $depertments = Departments::where('user_id', $user->id)->get();
+        $positions = Positions::whereIn('department_id', $depertments->pluck('id'))->get();
+        $employees = Employees::with('position')->whereIn('position_id', $positions->pluck('id'))->get();
 
         return response()->json([
             'message' => 'Employees retrieved successfully',
@@ -29,7 +33,8 @@ class EmployeesController extends Controller
     public function createEmployee(Request $request)
     {
         $user = Auth::user();
-        $employees = Employees::where('user_id', $user->id)->get();
+        $depertments = Departments::where('user_id', $user->id)->get();
+        $positions = Positions::whereIn('department_id', $depertments->pluck('id'))->get();
         
         $request->validate([
             'name' => 'required|string|max:255',
@@ -57,8 +62,10 @@ class EmployeesController extends Controller
     public function updateEmployee(Request $request, $id)
     {
         $user = Auth::user();
+        $depertments = Departments::where('user_id', $user->id)->get();
+        $positions = Positions::whereIn('department_id', $depertments->pluck('id'))->get();
         $employee = Employees::where('id', $id)
-                    ->where('user_id', $user->id)->get()
+                    ->whereIn('position_id', $positions->pluck('id'))->get()
                     ->first();
 
         if (!$employee) {
@@ -102,8 +109,10 @@ class EmployeesController extends Controller
     public function deleteEmployee($id)
     {
         $user = Auth::user();
+        $depertments = Departments::where('user_id', $user->id)->get();
+        $positions = Positions::whereIn('department_id', $depertments->pluck('id'))->get();
         $employee = Employees::where('id', $id)
-                    ->where('user_id', $user->id)
+                    ->whereIn('position_id', $positions->pluck('id'))
                     ->first();
 
         if (!$employee) {

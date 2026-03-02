@@ -34,7 +34,7 @@
             <div class="filter-select">
               <select v-model="filterDept">
                 <option value="">Departemen</option>
-                <option v-for="d in departemenOptions" :key="d" :value="d">{{ d }}</option>
+                <option v-for="d in departemenOptions" :key="d" :value="d">{{ d.name }}</option>
               </select>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
@@ -62,7 +62,7 @@
                 <th class="col-no">No</th>
                 <th class="col-nama">Nama Lengkap</th>
                 <th class="col-email">Email</th>
-                <th class="col-dept">Departemen</th>
+                <th class="col-dept">Jabatan</th>
                 <th class="col-aksi1">Aksi</th>
                 <th class="col-aksi2">Aksi</th>
               </tr>
@@ -76,14 +76,14 @@
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="#bbb"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
                     </div>
                     <div class="nama-info">
-                      <p class="nama-text">{{ item.nama }}</p>
+                      <p class="nama-text">{{ item.name }}</p>
                       <p class="email-sub">{{ item.email }}</p>
                     </div>
                   </div>
                 </td>
                 <td class="col-email td-email">{{ item.email }}</td>
                 <td class="col-dept">
-                  <span class="dept-badge">{{ item.departemen }}</span>
+                  <span class="dept-badge">{{ item.position?.title }}</span>
                 </td>
                 <td class="col-aksi1">
                   <button class="btn-edit" @click="openEditModal(item)">
@@ -150,17 +150,25 @@
           <div class="modal-body">
             <div class="form-group">
               <label>Nama Lengkap</label>
-              <input v-model="form.nama" type="text" placeholder="Masukkan nama lengkap" />
+              <input v-model="form.name" type="text" placeholder="Masukkan nama lengkap" />
             </div>
             <div class="form-group">
               <label>Email</label>
               <input v-model="form.email" type="email" placeholder="Masukkan email" />
             </div>
             <div class="form-group">
-              <label>Departemen</label>
-              <select v-model="form.departemen">
-                <option value="" disabled>Pilih departemen</option>
-                <option v-for="d in departemenOptions" :key="d" :value="d">{{ d }}</option>
+              <label>phone</label>
+              <input v-model="form.phone" type="text" placeholder="Masukkan nomor telepon" />
+            </div>
+            <div class="form-group">
+              <label>Alamat</label>
+              <input v-model="form.address" type="text" placeholder="Masukkan alamat" />
+            </div>
+            <div class="form-group">
+              <label>Positions</label>
+              <select v-model="form.position_id">
+                <option value="" disabled>Pilih jabatan</option>
+                <option v-for="p in jabatanList" :key="p.id" :value="p.id">{{ p.title }}</option>
               </select>
             </div>
           </div>
@@ -198,125 +206,45 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import AppSidebar from '@/components/AppSidebar.vue'
 import AppTopbar from '@/components/AppTopbar.vue'
+import { useKaryawan } from '@/composables/useKaryawan.js'
+import { useToast } from '@/composables/useToast.js'
 
-const activeNav    = ref('karyawan')
-const handleLogout = () => console.log('logout')
+const activeNav = ref('karyawan')
 
-// ===== DATA =====
-const karyawanList = ref([
-  { id:1,  nama:'Budi Santoso',  email:'budi.santoso@gmail.com',    departemen:'HRD & GA'  },
-  { id:2,  nama:'Siti Rahma',    email:'siti.rahma@gmail.com',      departemen:'IT'        },
-  { id:3,  nama:'Ahmad Fauzi',   email:'ahmad.fauzi@gmail.com',     departemen:'IT'        },
-  { id:4,  nama:'Dewi Lestari',  email:'dewi.lestari@gmail.com',    departemen:'Produksi'  },
-  { id:5,  nama:'Rizky Ananda',  email:'rizky.ananda@gmail.com',    departemen:'Finance'   },
-  { id:6,  nama:'Maya Sari',     email:'maya.sari@gmail.com',       departemen:'IT'        },
-  { id:7,  nama:'Agus Pratama',  email:'agus.pratama@gmail.com',    departemen:'Produksi'  },
-  { id:8,  nama:'Rina Wulandari',email:'rina.wulandari@gmail.com',  departemen:'Sales'     },
-  { id:9,  nama:'Dian Permata',  email:'dian.permata@gmail.com',    departemen:'Finance'   },
-  { id:10, nama:'Hendra Wijaya', email:'hendra.wijaya@gmail.com',   departemen:'HRD & GA'  },
-  { id:11, nama:'Lestari Dewi',  email:'lestari.dewi@gmail.com',    departemen:'Marketing' },
-  { id:12, nama:'Farhan Akbar',  email:'farhan.akbar@gmail.com',    departemen:'IT'        },
-])
+const {
+  karyawanList,
+  filterDept,
+  sortBy,
+  searchQuery,
+  filteredData,
+  departemenOptions,
+  showModal,
+  isEditing,
+  form,
+  paginatedData,
+  currentPage,
+  perPage,
+  visiblePages,
+  jabatanList,
+  totalPages,
+  openAddModal,
+  openEditModal,
+  closeModal,
+  showDeleteModal,
+  deleteTarget,
+  confirmDelete,
+  deleteData,
+  saveData,
+  loadData,
+  handleLogout,
+} = useKaryawan()
 
-const departemenOptions = ['HRD & GA','IT','Finance','Produksi','Sales','Marketing','GA']
-
-// ===== FILTERS + SORT =====
-const searchQuery = ref('')
-const filterDept  = ref('')
-const sortBy      = ref('nama-asc')
-
-watch([searchQuery, filterDept, sortBy], () => { currentPage.value = 1 })
-
-const filteredData = computed(() => {
-  let list = [...karyawanList.value]
-
-  if (filterDept.value)  list = list.filter(k => k.departemen === filterDept.value)
-  if (searchQuery.value) {
-    const q = searchQuery.value.toLowerCase()
-    list = list.filter(k => k.nama.toLowerCase().includes(q) || k.email.toLowerCase().includes(q))
-  }
-
-  if (sortBy.value === 'nama-asc')  list.sort((a,b) => a.nama.localeCompare(b.nama))
-  if (sortBy.value === 'nama-desc') list.sort((a,b) => b.nama.localeCompare(a.nama))
-  if (sortBy.value === 'dept')      list.sort((a,b) => a.departemen.localeCompare(b.departemen))
-
-  return list
+onMounted(()=> {
+  loadData()
 })
-
-// ===== PAGINATION =====
-const currentPage = ref(1)
-const perPage     = ref(10)
-
-const totalPages = computed(() => Math.max(1, Math.ceil(filteredData.value.length / perPage.value)))
-
-const paginatedData = computed(() => {
-  const start = (currentPage.value - 1) * perPage.value
-  return filteredData.value.slice(start, start + perPage.value)
-})
-
-const visiblePages = computed(() => {
-  const total = totalPages.value
-  const cur   = currentPage.value
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
-  const pages = [1]
-  if (cur > 3) pages.push('...')
-  for (let i = Math.max(2, cur - 1); i <= Math.min(total - 1, cur + 1); i++) pages.push(i)
-  if (cur < total - 2) pages.push('...')
-  pages.push(total)
-  return pages
-})
-
-// ===== MODAL TAMBAH/EDIT =====
-const showModal  = ref(false)
-const isEditing  = ref(false)
-const editingId  = ref(null)
-const form       = ref({ nama:'', email:'', departemen:'' })
-
-const openAddModal = () => {
-  isEditing.value = false
-  editingId.value = null
-  form.value = { nama:'', email:'', departemen:'' }
-  showModal.value = true
-}
-
-const openEditModal = (item) => {
-  isEditing.value = true
-  editingId.value = item.id
-  form.value = { nama: item.nama, email: item.email, departemen: item.departemen }
-  showModal.value = true
-}
-
-const closeModal = () => { showModal.value = false }
-
-const saveData = () => {
-  if (!form.value.nama.trim() || !form.value.email.trim() || !form.value.departemen) return
-  if (isEditing.value) {
-    const idx = karyawanList.value.findIndex(k => k.id === editingId.value)
-    if (idx !== -1) karyawanList.value[idx] = { id: editingId.value, ...form.value }
-  } else {
-    const newId = Math.max(...karyawanList.value.map(k => k.id), 0) + 1
-    karyawanList.value.push({ id: newId, ...form.value })
-  }
-  closeModal()
-}
-
-// ===== MODAL HAPUS =====
-const showDeleteModal = ref(false)
-const deleteTarget    = ref(null)
-
-const confirmDelete = (item) => {
-  deleteTarget.value    = item
-  showDeleteModal.value = true
-}
-
-const deleteData = () => {
-  karyawanList.value    = karyawanList.value.filter(k => k.id !== deleteTarget.value.id)
-  showDeleteModal.value = false
-  if (currentPage.value > totalPages.value) currentPage.value = totalPages.value
-}
 </script>
 
 <style scoped>

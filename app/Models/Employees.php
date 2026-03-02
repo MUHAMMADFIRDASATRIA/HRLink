@@ -13,6 +13,7 @@ class Employees extends Model
         'phone',
         'address',
         'position_id',
+        'user_id',
     ];
 
     public function position()

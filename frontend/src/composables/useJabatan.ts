@@ -93,26 +93,26 @@ export function useJabatan() {
   };
 
     const saveData = async () => {
-    try {
-      if (!form.value.title.trim() || !form.value.department_id) return;
-      if (isEditMode.value && editingId.value !== null) {
-        const res = await api.put(`/Positions/${editingId.value}`, form.value);
-        const idx = jabatanList.value.findIndex(j => j.id === editingId.value);
-        if (idx !== -1) jabatanList.value[idx] = res.data.position;
-        closeModal();
-        addToast('Jabatan berhasil diperbarui', 'success');
+      try {
+        if (!form.value.title.trim() || !form.value.department_id) return;
+        if (isEditMode.value && editingId.value !== null) {
+          const res = await api.put(`/Positions/${editingId.value}`, form.value);
+          const idx = jabatanList.value.findIndex(j => j.id === editingId.value);
+          if (idx !== -1) jabatanList.value[idx] = res.data.position;
+          closeModal();
+          addToast('Jabatan berhasil diperbarui', 'success');
 
-      } else {
-        const res = await api.post('/Positions', form.value);
-        jabatanList.value.push(res.data.position);
-        closeModal();
-        addToast('Jabatan berhasil ditambahkan', 'success');
+        } else {
+          const res = await api.post('/Positions', form.value);
+          jabatanList.value.push(res.data.position);
+          closeModal();
+          addToast('Jabatan berhasil ditambahkan', 'success');
 
+        }
+      } catch (err) {
+        error.value = 'Failed to save position';
+        addToast('Gagal menyimpan jabatan', 'error');
       }
-    } catch (err) {
-      error.value = 'Failed to save position';
-      addToast('Gagal menyimpan jabatan', 'error');
-    }
     };
 
 
