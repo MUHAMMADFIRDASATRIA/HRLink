@@ -292,6 +292,65 @@ export function useDashboard() {
         if (chartWrap.value) chartW.value = chartWrap.value.clientWidth || 600
     }
 
+    const expiringEmployees = computed(() => {
+        const employeeById = new Map<number, Employee>()
+        employeesRaw.value.forEach((e) => employeeById.set(e.id, e))
+
+        const positionDeptById = new Map<number, number>()
+        positionsRaw.value.forEach((p) => positionDeptById.set(p.id, p.department_id))
+
+        const departmentById = new Map<number, Department>()
+        departmentsRaw.value.forEach((d) => departmentById.set(d.id, d))
+
+        return pkwtRaw.value
+            .map((pkwt) => {
+                if (!pkwt.end_date || !pkwt.employee_id) return null
+                const days = calcSisaHari(pkwt.end_date)
+                if (days < 0 || days > 30) return null
+
+                const employee = employeeById.get(pkwt.employee_id)
+                if (!employee) return null
+
+                const deptId = employee.position_id ? positionDeptById.get(employee.position_id) : undefined
+                const dept = deptId ? (departmentById.get(deptId)?.name ?? '-') : '-'
+
+                return { name: (employee as any).name ?? '-', dept, days }
+            })
+            .filter((item): item is { name: string; dept: string; days: number } => item !== null)
+            .sort((a, b) => a.days - b.days)
+    })
+
+    const expiredEmployees = computed(() => {
+        const employeeById = new Map<number, Employee>()
+        employeesRaw.value.forEach((e) => employeeById.set(e.id, e))
+
+        const positionDeptById = new Map<number, number>()
+        positionsRaw.value.forEach((p) => positionDeptById.set(p.id, p.department_id))
+
+        const departmentById = new Map<number, Department>()
+        departmentsRaw.value.forEach((d) => departmentById.set(d.id, d))
+
+        return pkwtRaw.value
+            .map((pkwt) => {
+                if (!pkwt.end_date || !pkwt.employee_id) return null
+                const days = calcSisaHari(pkwt.end_date)
+                if (days > 0) return null
+
+                const employee = employeeById.get(pkwt.employee_id)
+                if (!employee) return null
+
+                const posId = employee.position_id ? positionDeptById.get(employee.position_id) : undefined
+                const position = posId ? (departmentById.get(posId)?.name ?? '-') : '-'
+
+                const endDate = new Date(pkwt.end_date)
+                const dateStr = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear()}` 
+
+                return { name: (employee as any).name ?? '-', position, days, endDate: dateStr }
+            })
+            .filter((item): item is { name: string; position: string; days: number; endDate: string } => item !== null)
+            .sort((a, b) => a.days - b.days)
+    })
+
     const loadData = async () => {
         try {
             const [pkwtRes, employeeRes, positionRes, departmentRes] = await Promise.all([
@@ -349,6 +408,8 @@ export function useDashboard() {
         workerPieLegend,
         workerPieSegments,
         workerPieHighlight,
+        expiringEmployees,
+        expiredEmployees,
         handleLogout,
         loadData
     }

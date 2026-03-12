@@ -14,7 +14,20 @@
       <div class="content-area">
 
         <!-- Page Title -->
-        <h1 class="page-title">Rekap Karyawan PKWT</h1>
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Rekap Karyawan PKWT</h1>
+            <p class="page-subtitle">Ringkasan status kontrak, departemen aktif, dan masa berakhir PKWT.</p>
+          </div>
+
+          <div class="page-actions">
+            <button class="export-btn" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+        </div>
 
         <!-- STAT CARDS -->
         <div class="stat-grid">
@@ -175,83 +188,129 @@
           <!-- Segera Berakhir -->
           <div class="card expiring-card">
             <div class="card-header">
-              <h3 class="card-title">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                Segera Berakhir
-              </h3>
-              <span class="badge-red">2</span>
+              <div class="expiring-title-wrap">
+                <div class="expiring-icon-wrap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h3 class="card-title">Segera Berakhir</h3>
+              </div>
+              <span class="badge-count" :class="expiringEmployees.length > 0 ? 'badge-count--warn' : 'badge-count--ok'">
+                {{ expiringEmployees.length }} kontrak
+              </span>
             </div>
 
             <div class="expiring-list">
               <div class="expiring-item" v-for="emp in expiringEmployees" :key="emp.name">
-                <div class="emp-avatar">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#888"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+                <div class="emp-avatar" :class="emp.days <= 7 ? 'avatar-urgent' : 'avatar-warning'">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
                 </div>
                 <div class="emp-info">
                   <p class="emp-name">{{ emp.name }}</p>
                   <p class="emp-dept">{{ emp.dept }}</p>
                 </div>
-                <div class="emp-days" :class="emp.days <= 7 ? 'urgent' : 'warning'">
-                  {{ emp.days }} hari
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <div class="emp-expiry">
+                  <span class="emp-pill" :class="emp.days <= 7 ? 'pill-urgent' : 'pill-warning'">
+                    {{ emp.days }} hari lagi
+                  </span>
+                    <span class="emp-enddate">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                      {{ emp.endDate }}
+                    </span>
                 </div>
               </div>
+                <div v-if="expiringEmployees.length === 0" class="expiring-empty">
+                  <div class="expiring-empty-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  </div>
+                  <p class="expiring-empty-text">Semua kontrak masih aman</p>
+                </div>
             </div>
           </div>
 
           <!-- Aktivitas Terbaru -->
           <div class="card activity-card">
             <div class="card-header">
-              <h3 class="card-title">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                Aktivitas Terbaru
-              </h3>
+              <div class="expiring-title-wrap">
+                <div class="expired-icon-wrap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                </div>
+                <h3 class="card-title">Kontrak Berakhir</h3>
+              </div>
+              <span class="badge-count badge-count--expired">{{ expiredEmployees.length }} kontrak</span>
             </div>
 
-            <div class="activity-list">
-              <div class="activity-item" v-for="act in activities" :key="act.name">
-                <div class="act-avatar">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#777"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            <div class="expired-list">
+              <div class="expired-item" v-for="end in expiredEmployees" :key="end.name">
+                <div class="expired-avatar">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
                 </div>
-                <div class="act-info">
-                  <p class="act-name">{{ act.name }}</p>
-                  <p class="act-desc">{{ act.desc }}</p>
+                <div class="expired-info">
+                  <p class="expired-name">{{ end.name }}</p>
+                  <p class="expired-position">{{ end.position }}</p>
                 </div>
-                <span class="act-time">{{ act.time }}</span>
+                <div class="expired-date-wrap">
+                  <span class="expired-label">Berakhir</span>
+                  <span class="expired-date">{{ end.endDate }}</span>
+                </div>
+              </div>
+              <div v-if="expiredEmployees.length === 0" class="expiring-empty">
+                <div class="expiring-empty-icon expiring-empty-icon--ok">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <p class="expiring-empty-text">Tidak ada kontrak yang berakhir</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ROW 4: Departemen Table -->
-        <div class="card dept-table-card">
+        <!-- ROW 4: Departemen Diagram -->
+        <div class="card dept-chart-card">
           <div class="card-header">
-            <h3 class="card-title">Departemen PKWT Aktif</h3>
-            <div class="table-actions">
-              <button class="tbl-btn">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-              </button>
-              <button class="tbl-btn">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </button>
-              <button class="tbl-btn">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-              </button>
-            </div>
+            <h3 class="card-title">Diagram Departemen PKWT Aktif</h3>
+            <span class="dept-chart-meta" v-if="departmentLineData.length">{{ departmentLineData.length }} departemen</span>
           </div>
 
-          <div class="dept-table-grid">
-            <div class="dept-table-item" v-for="dtd in deptTableData" :key="dtd.name">
-              <div class="dept-left">
-                <div class="dept-dot" :style="{ background: dtd.color }"></div>
-                <span class="dept-table-name">{{ dtd.name }}</span>
-              </div>
-              <div class="dept-right">
-                <span class="dept-count">{{ dtd.count }}</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-              </div>
-            </div>
+          <div class="dept-line-wrap" v-if="departmentLineData.length">
+            <svg :viewBox="`0 0 ${DEPT_CHART_W} ${DEPT_CHART_H}`" class="dept-line-svg" preserveAspectRatio="none">
+              <line
+                v-for="tick in deptYAxisTicks"
+                :key="`grid-${tick.value}`"
+                :x1="DEPT_PAD_LEFT"
+                :x2="DEPT_CHART_W - DEPT_PAD_RIGHT"
+                :y1="tick.y"
+                :y2="tick.y"
+                class="dept-grid-line"
+              />
+
+              <text
+                v-for="tick in deptYAxisTicks"
+                :key="`label-${tick.value}`"
+                :x="DEPT_PAD_LEFT - 8"
+                :y="tick.y + 4"
+                text-anchor="end"
+                class="dept-y-tick"
+              >{{ tick.value }}</text>
+
+              <path :d="deptLinePath" class="dept-line" />
+
+              <g v-for="point in departmentLinePoints" :key="point.id">
+                <circle :cx="point.x" :cy="point.y" r="4.5" :fill="point.color" class="dept-point" />
+                <circle :cx="point.x" :cy="point.y" r="2" fill="#fff" />
+                <text :x="point.x" :y="point.y - 10" text-anchor="middle" class="dept-point-value">{{ point.count }}</text>
+                <text :x="point.x" :y="DEPT_CHART_H - 10" text-anchor="middle" class="dept-x-label">{{ point.shortLabel }}</text>
+              </g>
+
+              <line
+                :x1="DEPT_PAD_LEFT"
+                :x2="DEPT_CHART_W - DEPT_PAD_RIGHT"
+                :y1="DEPT_CHART_H - DEPT_PAD_BOTTOM"
+                :y2="DEPT_CHART_H - DEPT_PAD_BOTTOM"
+                class="dept-axis-line"
+              />
+            </svg>
           </div>
+
+          <div v-else class="dept-chart-empty">Belum ada data departemen PKWT aktif.</div>
         </div>
 
       </div>
@@ -260,7 +319,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import AppSidebar from '@/components/AppSidebar.vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import { useDashboard } from '@/composables/useDashboard'
@@ -287,15 +346,17 @@ const {
   workerPieLegend,
   workerPieSegments,
   workerPieHighlight,
+  expiringEmployees,
+  expiredEmployees,
   handleLogout
 } = useDashboard()
 
 // ===== DATA =====
-const expiringEmployees = ref([
-  { name: 'Andi Saputra', dept: 'Sales',    days: 5  },
-  { name: 'Yogi Pratama', dept: 'Sales',    days: 9  },
-  { name: 'Andini',       dept: 'HRD & GA', days: 16 },
-])
+// const expiringEmployees = ref([
+//   { name: 'Andi Saputra', dept: 'Sales',    days: 5  },
+//   { name: 'Yogi Pratama', dept: 'Sales',    days: 9  },
+//   { name: 'Andini',       dept: 'HRD & GA', days: 16 },
+// ])
 
 const activities = ref([
   { name: 'Budi Santoso',    desc: 'Created PKWT', time: '2 minutes ago' },
@@ -303,12 +364,59 @@ const activities = ref([
   { name: 'Andika Settawan', desc: 'Added a new PKWT', time: '3 hours ago' },
 ])
 
-const deptTableData = ref([
-  { name: 'HRD & GA', count: 38, color: '#4db89e' },
-  { name: 'Produksi', count: 38, color: '#f0c04a' },
-  { name: 'Sales',    count: 25, color: '#f07878' },
-  { name: 'IT',       count: 20, color: '#5bb8d4' },
-])
+const DEPT_CHART_W = 980
+const DEPT_CHART_H = 280
+const DEPT_PAD_LEFT = 44
+const DEPT_PAD_RIGHT = 18
+const DEPT_PAD_TOP = 22
+const DEPT_PAD_BOTTOM = 46
+
+const departmentLineData = computed(() => activeDepartments.value.slice(0, 10))
+
+const deptMaxCount = computed(() => {
+  if (!departmentLineData.value.length) return 5
+  const max = Math.max(...departmentLineData.value.map((item) => item.count), 0)
+  if (max <= 5) return 5
+  return Math.ceil(max / 5) * 5
+})
+
+const deptYAxisTicks = computed(() => {
+  const max = deptMaxCount.value
+  const values = [max, Math.round((max * 2) / 3), Math.round(max / 3), 0]
+  const plotHeight = DEPT_CHART_H - DEPT_PAD_TOP - DEPT_PAD_BOTTOM
+  return values.map((value) => ({
+    value,
+    y: DEPT_PAD_TOP + plotHeight - (value / max) * plotHeight
+  }))
+})
+
+const departmentLinePoints = computed(() => {
+  const items = departmentLineData.value
+  const count = items.length
+  if (!count) return []
+
+  const plotWidth = DEPT_CHART_W - DEPT_PAD_LEFT - DEPT_PAD_RIGHT
+  const plotHeight = DEPT_CHART_H - DEPT_PAD_TOP - DEPT_PAD_BOTTOM
+  const step = count > 1 ? plotWidth / (count - 1) : 0
+
+  return items.map((item, index) => {
+    const x = DEPT_PAD_LEFT + step * index
+    const y = DEPT_PAD_TOP + plotHeight - (item.count / deptMaxCount.value) * plotHeight
+    return {
+      ...item,
+      x,
+      y,
+      shortLabel: item.name.length > 12 ? `${item.name.slice(0, 12)}…` : item.name
+    }
+  })
+})
+
+const deptLinePath = computed(() => {
+  if (!departmentLinePoints.value.length) return ''
+  return departmentLinePoints.value
+    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
+    .join(' ')
+})
 </script>
 
 <style scoped>
@@ -343,11 +451,60 @@ const deptTableData = ref([
 .content-area::-webkit-scrollbar-track { background: transparent; }
 .content-area::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
 
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .page-title {
   font-size: 20px;
   font-weight: 700;
   color: #1a2e25;
   letter-spacing: -0.3px;
+}
+
+.page-subtitle {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: #8b948f;
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid #d8e6de;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #ffffff 0%, #f5faf7 100%);
+  color: #2e6d53;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.export-btn:hover {
+  transform: translateY(-1px);
+  border-color: #bfd8cb;
+  box-shadow: 0 6px 18px rgba(46,109,83,0.08);
+  background: linear-gradient(180deg, #ffffff 0%, #eef8f2 100%);
+}
+
+.export-btn:active {
+  transform: translateY(0);
 }
 
 /* STAT CARDS */
@@ -456,37 +613,133 @@ const deptTableData = ref([
 
 .badge-red { background: #ffe0e0; color: #d05050; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
 
-.expiring-list { display: flex; flex-direction: column; gap: 12px; }
-.expiring-item { display: flex; align-items: center; gap: 12px; }
-.emp-avatar { width: 38px; height: 38px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.emp-name { font-size: 13.5px; font-weight: 600; color: #222; }
-.emp-dept { font-size: 11.5px; color: #aaa; }
-.emp-days { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-.emp-days.urgent { color: #d05050; }
-.emp-days.warning { color: #d4a017; }
-
-.activity-list { display: flex; flex-direction: column; gap: 14px; }
-.activity-item { display: flex; align-items: flex-start; gap: 10px; }
-.act-avatar { width: 34px; height: 34px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.act-name { font-size: 13px; font-weight: 600; color: #222; }
-.act-desc { font-size: 11.5px; color: #aaa; margin-top: 1px; }
-.act-time { margin-left: auto; font-size: 11px; color: #bbb; white-space: nowrap; padding-top: 2px; }
-
-/* DEPT TABLE */
-.table-actions { display: flex; gap: 6px; }
-.tbl-btn {
-  width: 30px; height: 30px;
-  border: 1px solid #ebebeb; border-radius: 7px;
-  background: #fafafa; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: #888; transition: all 0.15s;
+/* ===== EXPIRING / EXPIRED HEADER ===== */
+.expiring-title-wrap { display: flex; align-items: center; gap: 8px; }
+.expiring-icon-wrap {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: #fff8e6; color: #c8960d;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.tbl-btn:hover { background: #f0f0f0; color: #444; }
+.expired-icon-wrap {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: #fdecea; color: #d05050;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.badge-count { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.badge-count--warn    { background: #fff3cd; color: #a07000; }
+.badge-count--ok      { background: #e6f4ef; color: #2e7d5e; }
+.badge-count--expired { background: #fdecea; color: #d05050; }
 
-.dept-table-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-.dept-table-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid #f4f4f4; }
-.dept-left { display: flex; align-items: center; gap: 8px; }
-.dept-dot { width: 10px; height: 10px; border-radius: 50%; }
-.dept-right { display: flex; align-items: center; gap: 6px; }
-.dept-table-name { font-size: 13.5px; color: #333; font-weight: 500; }
+/* ===== SEGERA BERAKHIR ===== */
+.expiring-list { display: flex; flex-direction: column; gap: 8px; }
+.expiring-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 10px;
+  border: 1px solid #f0f0f0; transition: background 0.15s, box-shadow 0.15s;
+}
+.expiring-item:hover { background: #fffdf5; box-shadow: 0 2px 8px rgba(200,150,13,0.07); }
+.emp-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.avatar-urgent  { background: #fdecea; color: #d05050; }
+.avatar-warning { background: #fff3cd; color: #c8960d; }
+.emp-info { flex: 1; min-width: 0; }
+.emp-name { font-size: 13px; font-weight: 600; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.emp-dept { font-size: 11.5px; color: #bbb; margin-top: 1px; }
+.emp-expiry { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.emp-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.pill-urgent  { background: #fdecea; color: #d05050; }
+.pill-warning { background: #fff3cd; color: #c8960d; }
+.emp-enddate { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #bbb; white-space: nowrap; }
+
+/* ===== KONTRAK BERAKHIR ===== */
+.expired-list { display: flex; flex-direction: column; gap: 8px; }
+.expired-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 10px;
+  border: 1px solid #f0f0f0; transition: background 0.15s;
+}
+.expired-item:hover { background: #fff7f7; }
+.expired-avatar { width: 36px; height: 36px; border-radius: 50%; background: #f0f0f0; color: #ccc; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.expired-info { flex: 1; min-width: 0; }
+.expired-name { font-size: 13px; font-weight: 600; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.expired-position { font-size: 11.5px; color: #bbb; margin-top: 1px; }
+.expired-date-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+.expired-label { font-size: 10.5px; color: #d05050; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+.expired-date  { font-size: 12px; color: #999; white-space: nowrap; }
+
+/* ===== EMPTY STATE ===== */
+.expiring-empty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 0; }
+.expiring-empty-icon { width: 44px; height: 44px; border-radius: 50%; background: #e6f4ef; color: #2e7d5e; display: flex; align-items: center; justify-content: center; }
+.expiring-empty-icon--ok { background: #e6f4ef; color: #2e7d5e; }
+.expiring-empty-text { font-size: 12.5px; color: #bbb; }
+
+/* DEPT CHART */
+.dept-chart-card {
+  border: 1px solid #ecedf1;
+  box-shadow: 0 2px 10px rgba(26,35,61,0.04);
+}
+
+.dept-chart-meta {
+  font-size: 11.5px;
+  color: #97a2b0;
+  font-weight: 600;
+}
+
+.dept-line-wrap {
+  width: 100%;
+  height: 280px;
+}
+
+.dept-line-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.dept-grid-line {
+  stroke: #edf1f5;
+  stroke-width: 1;
+}
+
+.dept-axis-line {
+  stroke: #dbe2ea;
+  stroke-width: 1.2;
+}
+
+.dept-y-tick {
+  fill: #a2adbb;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.dept-line {
+  fill: none;
+  stroke: #2f5579;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dept-point {
+  stroke: #fff;
+  stroke-width: 1.6;
+}
+
+.dept-point-value {
+  fill: #2f3e53;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.dept-x-label {
+  fill: #8f9baa;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.dept-chart-empty {
+  text-align: center;
+  font-size: 12.5px;
+  color: #a2acb8;
+  padding: 22px 0;
+}
 </style>
