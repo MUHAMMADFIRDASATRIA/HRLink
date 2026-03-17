@@ -29,6 +29,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/TambahPKWT',
+      name: 'TambahPKWT',
+      component: () => import('@/views/PkwtAction.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/Reminder',
       name : 'Reminder',
       component: () => import('@/views/Reminder.vue'),
@@ -61,6 +67,12 @@ const router = createRouter({
     {
       path : '/TambahKaryawan',
       name : 'TambahKaryawan',
+      component : () => import('@/views/TambahKaryawan.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path : '/Karyawan/:id/edit',
+      name : 'EditKaryawan',
       component : () => import('@/views/TambahKaryawan.vue'),
       meta: { requiresAuth: true }
     }

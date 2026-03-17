@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Pkwt;
 
@@ -32,9 +33,25 @@ class PkwtController extends Controller
 
         $request->validate([
             'employee_id'    => 'required|integer|exists:employees,id',
+            'contract_number' => 'required|string|max:255|unique:pkwt,contract_number',
             'tglMulaiRaw'    => 'required|date',
             'tglBerakhirRaw' => 'required|date|after_or_equal:tglMulaiRaw',
+            'contract_type' => 'required|string|max:100',
+            'work_type' => 'required|string|max:100',
+            'work_type_secondary' => 'required|string|max:100',
+            'base_salary' => 'required|numeric|min:0',
+            'allowance' => 'nullable|numeric|min:0',
+            'total_salary' => 'required|numeric|min:0',
+            'responsible_name' => 'required|string|max:255',
+            'signed_date' => 'required|date',
+            'work_location' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+            'signed_contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
+
+        $signedContractPath = $request->hasFile('signed_contract_file')
+            ? $request->file('signed_contract_file')->store('pkwt/signed', 'public')
+            : null;
 
         $end  = new \DateTime($request->input('tglBerakhirRaw'));
         $now  = new \DateTime('today');
@@ -48,9 +65,20 @@ class PkwtController extends Controller
         $pkwt = Pkwt::create([
             'user_id'         => $user->id,
             'employee_id'     => $request->input('employee_id'),
-            'contract_number' => 'PKWT-' . time(),
+            'contract_number' => $request->input('contract_number'),
             'start_date'      => $request->input('tglMulaiRaw'),
             'end_date'        => $request->input('tglBerakhirRaw'),
+            'contract_type'   => $request->input('contract_type'),
+            'work_type'       => $request->input('work_type'),
+            'work_type_secondary' => $request->input('work_type_secondary'),
+            'base_salary'     => $request->input('base_salary'),
+            'allowance'       => $request->input('allowance', 0),
+            'total_salary'    => $request->input('total_salary'),
+            'responsible_name' => $request->input('responsible_name'),
+            'signed_date'     => $request->input('signed_date'),
+            'work_location'   => $request->input('work_location'),
+            'notes'           => $request->input('notes'),
+            'signed_contract_file' => $signedContractPath,
             'status'          => $status,
         ]);
 
@@ -73,9 +101,29 @@ class PkwtController extends Controller
 
         $request->validate([
             'employee_id'    => 'required|integer|exists:employees,id',
+            'contract_number' => 'required|string|max:255|unique:pkwt,contract_number,' . $id,
             'tglMulaiRaw'    => 'required|date',
             'tglBerakhirRaw' => 'required|date|after_or_equal:tglMulaiRaw',
+            'contract_type' => 'required|string|max:100',
+            'work_type' => 'required|string|max:100',
+            'work_type_secondary' => 'required|string|max:100',
+            'base_salary' => 'required|numeric|min:0',
+            'allowance' => 'nullable|numeric|min:0',
+            'total_salary' => 'required|numeric|min:0',
+            'responsible_name' => 'required|string|max:255',
+            'signed_date' => 'required|date',
+            'work_location' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+            'signed_contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
+
+        $signedContractPath = $pkwt->signed_contract_file;
+        if ($request->hasFile('signed_contract_file')) {
+            if ($signedContractPath) {
+                Storage::disk('public')->delete($signedContractPath);
+            }
+            $signedContractPath = $request->file('signed_contract_file')->store('pkwt/signed', 'public');
+        }
 
         $end  = new \DateTime($request->input('tglBerakhirRaw'));
         $now  = new \DateTime('today');
@@ -88,8 +136,20 @@ class PkwtController extends Controller
 
         $pkwt->update([
             'employee_id' => $request->input('employee_id'),
+            'contract_number' => $request->input('contract_number'),
             'start_date'  => $request->input('tglMulaiRaw'),
             'end_date'    => $request->input('tglBerakhirRaw'),
+            'contract_type' => $request->input('contract_type'),
+            'work_type' => $request->input('work_type'),
+            'work_type_secondary' => $request->input('work_type_secondary'),
+            'base_salary' => $request->input('base_salary'),
+            'allowance' => $request->input('allowance', 0),
+            'total_salary' => $request->input('total_salary'),
+            'responsible_name' => $request->input('responsible_name'),
+            'signed_date' => $request->input('signed_date'),
+            'work_location' => $request->input('work_location'),
+            'notes' => $request->input('notes'),
+            'signed_contract_file' => $signedContractPath,
             'status'      => $status,
         ]);
 

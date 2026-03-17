@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('agama')->nullable();
             $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed'])->nullable();
             $table->date('date_of_birth')->nullable();
+            $table->string('education')->nullable();
             $table->foreignId('position_id')->constrained('positions')->onDelete('cascade');
             $table->foreignId('department_id')->constrained('departments')->onDelete('cascade');
             $table->timestamps();

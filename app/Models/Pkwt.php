@@ -14,6 +14,17 @@ class Pkwt extends Model
         'contract_number',
         'start_date',
         'end_date',
+        'contract_type',
+        'work_type',
+        'work_type_secondary',
+        'base_salary',
+        'allowance',
+        'total_salary',
+        'responsible_name',
+        'signed_date',
+        'work_location',
+        'notes',
+        'signed_contract_file',
         'status',
     ];
 

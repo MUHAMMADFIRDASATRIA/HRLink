@@ -20,18 +20,18 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2">
               <polyline points="9 18 15 12 9 6"/>
             </svg>
-            <span class="bc-current">Tambah Karyawan</span>
+            <span class="bc-current">{{ pageTitle }}</span>
           </div>
           <button class="btn-tambah-top">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
-            Tambah Karyawan
+            {{ pageTitle }}
           </button>
         </div>
 
         <!-- Page Title -->
-        <h1 class="page-title">Tambah Karyawan</h1>
+        <h1 class="page-title">{{ pageTitle }}</h1>
 
         <!-- ─── FORM CARD ─── -->
         <div class="form-card">
@@ -213,7 +213,7 @@
                     <input
                       v-model="form.alamat"
                       type="text"
-                      class="field-input"
+                      class="field-input field-input--full"
                       :class="{ 'field-input--error': errors.alamat }"
                       placeholder="Masukkan alamat lengkap"
                     />
@@ -351,7 +351,7 @@
                         v-model="form.departemen"
                         class="field-select"
                         :class="{ 'field-input--error': errors.departemen }"
-                        :disabled="isLoading || isSaving"
+                        :disabled="isFormLoading || isSubmitting"
                       >
                         <option value="">Pilih Departemen</option>
                         <option
@@ -384,7 +384,7 @@
                         v-model="form.jabatan"
                         class="field-select"
                         :class="{ 'field-input--error': errors.jabatan }"
-                        :disabled="isLoading || isSaving || !form.departemen"
+                        :disabled="isFormLoading || isSubmitting || !form.departemen"
                       >
                         <option value="">Pilih Jabatan</option>
                         <option
@@ -401,6 +401,19 @@
                     </div>
                   </div>
                   <p v-if="errors.jabatan" class="field-error">{{ errors.jabatan }}</p>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label">Dokumen Pendukung (Opsional)</label>
+                  <input
+                    ref="supportingDocInput"
+                    type="file"
+                    class="field-input field-input--full field-input--file"
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                    @change="onSupportingDocChange"
+                  />
+                  <p class="field-help">Boleh dikosongkan jika belum ada dokumen.</p>
+                  <p v-if="supportingDocName" class="field-help field-help--file">File terpilih: {{ supportingDocName }}</p>
                 </div>
               </div>
 
@@ -455,26 +468,26 @@
 
           <!-- Form Footer -->
           <div class="form-footer">
-            <button class="btn-batal" :disabled="isSaving" @click="handleBatal">Batal</button>
+            <button class="btn-batal" :disabled="isSubmitting" @click="handleBatal">Batal</button>
             <div class="footer-right">
-              <button v-if="currentStep > 1" class="btn-back" :disabled="isSaving" @click="currentStep--">
+              <button v-if="currentStep > 1" class="btn-back" :disabled="isSubmitting" @click="currentStep--">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="15 18 9 12 15 6"/>
                 </svg>
                 Kembali
               </button>
-              <button v-if="currentStep < 3" class="btn-next" :disabled="isSaving" @click="nextStep">
+              <button v-if="currentStep < 3" class="btn-next" :disabled="isSubmitting" @click="nextStep">
                 Lanjut
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="9 18 15 12 9 6"/>
                 </svg>
               </button>
-              <button v-else class="btn-submit" :disabled="isSaving" @click="handleSubmit">
-                <span v-if="isSaving" class="btn-spinner"></span>
+              <button v-else class="btn-submit" :disabled="isSubmitting" @click="handleSubmit">
+                <span v-if="isSubmitting" class="btn-spinner"></span>
                 <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                {{ isSaving ? 'Menyimpan...' : 'Tambah Karyawan' }}
+                {{ submitLabel }}
               </button>
             </div>
           </div>
@@ -512,9 +525,11 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import AppSidebar from '@/components/Appsidebar.vue'
 import AppTopbar from '@/components/Apptopbar.vue'
 import { useCreateKaryawan } from '@/composables/useCreate'
+import { useEdit } from '@/composables/useEdit'
 
 // ─── Types ─────────────────────────────────────
 interface FormData {
@@ -548,11 +563,39 @@ interface FormErrors {
   jabatan?: string
 }
 
+interface EmployeePayload {
+  name: string
+  email: string
+  phone: string
+  address: string
+  gender: string
+  location_of_birth: string
+  agama: string
+  marital_status: string
+  date_of_birth: string
+  education: string
+  position_id: number | null
+  department_id: number | null
+}
+
+interface EmployeeItem extends EmployeePayload {
+  id: number
+  position?: {
+    id: number
+    title: string
+    department_id: number
+  }
+}
+
 // ─── State ─────────────────────────────────────
 const activeNav   = ref<string>('karyawan')
 const currentStep = ref<number>(1)
 const photoPreview = ref<string | null>(null)
 const fileInput    = ref<HTMLInputElement | null>(null)
+const supportingDocInput = ref<HTMLInputElement | null>(null)
+const supportingDoc = ref<File | null>(null)
+const route = useRoute()
+const router = useRouter()
 
 const {
   formData,
@@ -569,6 +612,36 @@ const {
   saveData,
   handleLogout,
 } = useCreateKaryawan()
+
+const {
+  isLoading: isEditLoading,
+  isSaving: isEditSaving,
+  loadById,
+  updateById,
+} = useEdit<EmployeeItem, EmployeePayload>({
+  listEndpoint: '/Employees',
+  updateEndpoint: (id) => `/Employees/${id}`,
+  getId: (item) => item.id,
+  mapItemToPayload: (item) => ({
+    name: String(item.name || ''),
+    email: String(item.email || ''),
+    phone: String(item.phone || ''),
+    address: String(item.address || ''),
+    gender: String(item.gender || ''),
+    location_of_birth: String(item.location_of_birth || ''),
+    agama: String(item.agama || ''),
+    marital_status: String(item.marital_status || ''),
+    date_of_birth: String(item.date_of_birth || ''),
+    education: String(item.education || ''),
+    position_id: Number(item.position_id || 0),
+    department_id: Number(item.department_id || item.position?.department_id || 0),
+  }),
+  listExtractor: (data) => ((data as { employees?: EmployeeItem[] })?.employees || []) as EmployeeItem[],
+  successMessage: 'Karyawan berhasil diperbarui',
+  loadErrorMessage: 'Data karyawan tidak ditemukan',
+  updateErrorMessage: 'Gagal memperbarui karyawan',
+  redirectTo: '/Karyawan',
+})
 
 const form = reactive<FormData>({
   namaLengkap:      '',
@@ -606,6 +679,23 @@ const selectedJabatanName = computed(() => {
   return jabatanId ? getJabatanName(jabatanId) : '—'
 })
 
+const editEmployeeId = computed(() => {
+  const value = Number(route.params.id)
+  return Number.isFinite(value) && value > 0 ? value : null
+})
+
+const isEditMode = computed(() => editEmployeeId.value !== null)
+
+const pageTitle = computed(() => (isEditMode.value ? 'Edit Karyawan' : 'Tambah Karyawan'))
+
+const submitLabel = computed(() => {
+  if (isSubmitting.value) return isEditMode.value ? 'Menyimpan Perubahan...' : 'Menyimpan...'
+  return isEditMode.value ? 'Simpan Perubahan' : 'Tambah Karyawan'
+})
+
+const isSubmitting = computed(() => (isEditMode.value ? isEditSaving.value : isSaving.value))
+const isFormLoading = computed(() => isLoading.value || isEditLoading.value)
+
 watch(() => form.departemen, () => {
   if (!form.jabatan) return
   const selectedJabatanId = Number(form.jabatan)
@@ -614,8 +704,32 @@ watch(() => form.departemen, () => {
 })
 
 onMounted(() => {
-  loadData()
+  initializeForm()
 })
+
+async function initializeForm(): Promise<void> {
+  await loadData()
+
+  if (!isEditMode.value || !editEmployeeId.value) return
+
+  const payload = await loadById(editEmployeeId.value)
+  if (!payload) {
+    router.push('/Karyawan')
+    return
+  }
+
+  form.namaLengkap = payload.name
+  form.email = payload.email
+  form.telp = payload.phone
+  form.alamat = payload.address
+  form.agama = payload.agama
+  form.pendidikan = payload.education
+  form.tanggalLahir = payload.date_of_birth
+  form.jenisKelamin = mapGenderLabel(payload.gender)
+  form.statusPernikahan = mapMaritalStatusLabel(payload.marital_status)
+  form.departemen = String(payload.department_id || '')
+  form.jabatan = String(payload.position_id || '')
+}
 
 // ─── Validation ────────────────────────────────
 function validateStep(step: number): boolean {
@@ -663,6 +777,19 @@ function mapMaritalStatus(value: string): 'single' | 'married' | 'divorced' | ''
   return ''
 }
 
+function mapGenderLabel(value: string): 'Laki-laki' | 'Perempuan' | '' {
+  if (value === 'male') return 'Laki-laki'
+  if (value === 'female') return 'Perempuan'
+  return ''
+}
+
+function mapMaritalStatusLabel(value: string): 'Belum Menikah' | 'Menikah' | 'Cerai' | '' {
+  if (value === 'single') return 'Belum Menikah'
+  if (value === 'married') return 'Menikah'
+  if (value === 'divorced') return 'Cerai'
+  return ''
+}
+
 async function handleSubmit(): Promise<void> {
   if (!validateStep(3)) return
 
@@ -676,14 +803,25 @@ async function handleSubmit(): Promise<void> {
     agama: form.agama,
     marital_status: mapMaritalStatus(form.statusPernikahan),
     date_of_birth: form.tanggalLahir,
+    education: form.pendidikan,
     position_id: Number(form.jabatan),
     department_id: Number(form.departemen),
+  }
+
+  if (isEditMode.value && editEmployeeId.value) {
+    await updateById(editEmployeeId.value, formData.value)
+    return
   }
 
   await saveData()
 }
 
 function handleBatal(): void {
+  if (isEditMode.value) {
+    router.push('/Karyawan')
+    return
+  }
+
   currentStep.value = 1
   Object.assign(form, {
     namaLengkap:'', tanggalLahir:'', jenisKelamin:'', statusPernikahan:'',
@@ -692,6 +830,10 @@ function handleBatal(): void {
   })
   resetFormData()
   photoPreview.value = null
+  supportingDoc.value = null
+  if (supportingDocInput.value) {
+    supportingDocInput.value.value = ''
+  }
 }
 
 function triggerFileInput(): void {
@@ -704,6 +846,13 @@ function onPhotoChange(e: Event): void {
   const reader = new FileReader()
   reader.onload = (ev) => { photoPreview.value = ev.target?.result as string }
   reader.readAsDataURL(file)
+}
+
+const supportingDocName = computed(() => supportingDoc.value?.name ?? '')
+
+function onSupportingDocChange(e: Event): void {
+  const file = (e.target as HTMLInputElement).files?.[0] ?? null
+  supportingDoc.value = file
 }
 </script>
 
@@ -863,6 +1012,8 @@ function onPhotoChange(e: Event): void {
 }
 .field-input:focus { border-color: #4db89e; box-shadow: 0 0 0 3px rgba(77,184,158,0.12); background: #fff; }
 .field-input::placeholder { color: #c0c8d4; }
+.field-input--full { width: 100%; }
+.field-input--file { padding: 8px 12px; }
 .field-input--error { border-color: #e05050 !important; }
 .field-input--icon { padding-left: 44px; }
 
@@ -886,6 +1037,9 @@ function onPhotoChange(e: Event): void {
 .input-icon-right { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
 
 .field-error { font-size: 11.5px; color: #e05050; font-weight: 500; }
+
+.field-help { font-size: 11.5px; color: #8a94a6; font-weight: 500; }
+.field-help--file { color: #2e7d55; }
 
 .two-col-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 

@@ -89,7 +89,7 @@
                     <button class="btn-icon" :title="`Lihat detail ${item.name}`" @click="router.push(`/DetailKaryawan/${item.id}`)">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
-                    <button class="btn-edit-sm" :title="`Edit ${item.name}`" @click="openEditModal(item)">
+                    <button class="btn-edit-sm" :title="`Edit ${item.name}`" @click="router.push(`/Karyawan/${item.id}/edit`)">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
                     <button class="btn-delete-sm" :title="`Hapus ${item.name}`" @click="confirmDelete(item)">
